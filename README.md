@@ -1,6 +1,8 @@
 # 隧道盾构机展示
 
-这是一个本地运行的原理演示。页面是一张全屏的北京西城地图，设备和部件都在地图中查看。
+这是一个可在浏览器运行的原理演示。页面是一张全屏的北京西城地图，设备和部件都在地图中查看。
+
+[打开在线演示](https://weilb.github.io/tunnel-boring-machine-demo/)。`main` 分支更新时，GitHub Actions 会运行测试并把构建后的 `dist/` 发布到 GitHub Pages。
 
 ## 启动
 
