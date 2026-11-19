@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#edf0e8" />
+    <meta name="description" content="在北京西城地图上定位盾构机并观察部件运动。设备位置为模拟。" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2326332f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23ffc69b' stroke-width='1.7'/%3E%3Cpath d='M16 6v20M7.35 11l17.3 10M7.35 21l17.3-10' stroke='%23ffc69b' stroke-width='1.7'/%3E%3C/svg%3E" />
+    <title>隧道盾构机展示</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-focus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 10-7 10S5 15 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2.2"/></symbol>
+      <symbol id="i-area" viewBox="0 0 24 24"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4M9 12h6m-3-3v6"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-bore" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.75"/><path d="M12 3v6.25m0 5.5V21M4.21 7.5l5.4 3.12m4.78 2.76 5.4 3.12m-15.58 0 5.4-3.12m4.78-2.76 5.4-3.12"/></symbol>
+      <symbol id="i-xray" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9ZM4 7.5l8 4.5 8-4.5M12 12v9M4 16.5l8-4.5 8 4.5"/></symbol>
+      <symbol id="i-section" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9ZM4 7.5l8 4.5 8-4.5M12 12v9m0-18v9M4 16.5l8-4.5"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7V5Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 6v12m6-12v12" stroke-width="3"/></symbol>
+    </svg>
+
+    <main class="map-stage">
+      <div id="map-canvas" role="region" aria-label="北京西城区地图"></div>
+      <div id="map-annotation" class="annotation" aria-hidden="true" hidden>
+        <svg><path/><circle r="4"/></svg><div class="part-tag"><span></span><strong></strong></div>
+      </div>
+      <p class="map-status" id="map-status" role="status">正在加载地图…</p>
+      <a class="map-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>
+      <header class="exhibit-title">
+        <span class="exhibit-icon"><svg class="icon" aria-hidden="true"><use href="#i-bore"/></svg></span>
+        <h1>隧道盾构机展示</h1>
+      </header>
+
+      <aside class="locator" id="locator" data-mode="xray" aria-labelledby="locator-title">
+        <header class="locator-head">
+          <span class="locator-icon"><svg class="icon" aria-hidden="true"><use href="#i-focus"/></svg></span>
+          <h2 id="locator-title">设备定位</h2>
+          <button class="icon-button locator-toggle" id="locator-toggle" type="button" aria-expanded="true" aria-controls="locator-body" aria-label="收起设备定位" title="收起设备定位"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        </header>
+        <div class="locator-body" id="locator-body">
+          <div class="device-row">
+            <button class="device-link" id="locate-device" type="button" data-action="locate" disabled>整体定位</button>
+            <button class="icon-button region-button" id="area-button" type="button" data-action="overview" aria-label="查看西城周边" title="查看西城周边" disabled><svg class="icon" aria-hidden="true"><use href="#i-area"/></svg></button>
+          </div>
+          <div class="view-mode" id="view-mode" role="group" aria-labelledby="view-mode-title" hidden>
+            <p class="field-label" id="view-mode-title">展示方式</p>
+            <div class="mode-switch">
+              <button type="button" data-action="mode" data-mode="xray" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-xray"/></svg>透视联动</button>
+              <button type="button" data-action="mode" data-mode="cutaway" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-section"/></svg>原版剖视</button>
+            </div>
+          </div>
+          <p class="part-help" id="part-help">从列表选取，或直接点地图上的模型。</p>
+          <div class="part-list" id="part-list" role="group" aria-label="设备部件"></div>
+
+          <details class="motion-settings" id="motion-settings" hidden>
+            <summary>动画设置<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <div class="motion-body">
+              <button class="playback" data-action="play" type="button" id="playback" aria-label="暂停动画"><svg class="icon" aria-hidden="true"><use id="play-icon" href="#i-pause"/></svg><span id="play-text">暂停</span></button>
+              <div class="range-block"><div class="range-label"><label for="cutter-rpm">刀盘</label><output for="cutter-rpm" id="cutter-value">6 rpm</output></div><input id="cutter-rpm" type="range" min="0" max="18" step="1" value="6" /></div>
+              <div class="range-block"><div class="range-label"><label for="auger-rpm">螺旋叶片</label><output for="auger-rpm" id="auger-value">30 rpm</output></div><input id="auger-rpm" type="range" min="0" max="30" step="1" value="30" /></div>
+            </div>
+          </details>
+        </div>
+      </aside>
+    </main>
+  </body>
+</html>
